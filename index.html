@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tarot – Trải Bài</title>
+<title>Tarot by Vallue — Bàn trải bài</title>
+<meta name="theme-color" content="#fdfbf8">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -23,6 +23,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 body.motion-busy .star{animation-play-state:paused}
 @keyframes twinkle{0%{opacity:.1;transform:scale(.8)}100%{opacity:.7;transform:scale(1)}}
 .app{position:relative;z-index:1;width:100%;max-width:700px}
+
+/* ── Draw-mode switch ── */
+.mode-switch{position:fixed;top:16px;left:16px;z-index:320;display:flex;padding:4px;border:1px solid rgba(108,92,231,.45);border-radius:999px;background:rgba(8,6,19,.88);box-shadow:0 10px 28px rgba(0,0,0,.28);backdrop-filter:blur(10px)}
+.mode-switch button{border:0;border-radius:999px;background:transparent;color:#8b82cc;padding:8px 11px;font:600 10px/1 'Segoe UI',system-ui,sans-serif;letter-spacing:.08em;cursor:pointer;transition:background .18s,color .18s,box-shadow .18s}
+.mode-switch button:hover{color:#e8e4ff}.mode-switch button.active{background:#534AB7;color:#fff;box-shadow:0 3px 12px rgba(83,74,183,.45)}
 
 /* ── Header ── */
 .header{text-align:center;margin-bottom:2rem}
@@ -119,6 +124,31 @@ h1{font-size:30px;font-weight:300;letter-spacing:.55em;color:#e8e4ff;font-family
 .slot.ready{border-color:#6c5ce7;box-shadow:0 0 14px rgba(108,92,231,.12)}
 .slot.revealing{z-index:40}
 .slot-dot{width:6px;height:6px;border-radius:50%;background:#2d2560}
+
+/* ── Free 78-card workspace ── */
+.multi-workspace{display:none}
+.canvas-toolbar{position:fixed;top:16px;right:16px;z-index:12;display:flex;align-items:center;gap:5px;padding:4px;border:1px solid rgba(108,92,231,.38);border-radius:999px;background:rgba(8,6,19,.82);box-shadow:0 10px 28px rgba(0,0,0,.24);backdrop-filter:blur(10px)}
+.canvas-toolbar button{width:30px;height:30px;border:0;border-radius:50%;background:rgba(108,92,231,.18);color:#e8e4ff;font:400 18px/1 system-ui;cursor:pointer;transition:background .18s,transform .18s}.canvas-toolbar button:hover{background:rgba(108,92,231,.42);transform:scale(1.06)}
+.canvas-zoom-label{min-width:43px;padding:5px 3px;border-radius:7px;color:#bdb6ef;font-size:10px;text-align:center;letter-spacing:.04em;cursor:text;user-select:none}.canvas-zoom-label:hover,.canvas-zoom-label:focus{background:rgba(108,92,231,.16);outline:none}.canvas-zoom-input{width:48px;height:26px;border:1px solid #6c5ce7;border-radius:7px;background:#110d2a;color:#e8e4ff;font:600 10px/1 'Segoe UI',system-ui,sans-serif;text-align:center;outline:none}
+.free-canvas{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background:radial-gradient(ellipse 60% 55% at 50% 40%,rgba(83,60,200,.13),transparent 72%),rgba(8,6,19,.12)}
+.free-canvas.is-panning{cursor:grabbing}.free-canvas-content{position:absolute;left:0;top:0;width:3300px;height:1600px;transform-origin:0 0;will-change:transform}
+.free-placement-zone{position:absolute;inset:0;border:3.5px dashed #000;border-radius:22px;background-image:radial-gradient(circle,rgba(139,130,204,.26) 1px,transparent 1.3px);background-size:34px 34px;pointer-events:none}
+.free-slot{position:absolute;display:block;border:0!important;background:transparent!important;box-shadow:none!important;transform:rotate(var(--slot-rotation,0deg))!important;transform-origin:center center;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}.free-slot::after{display:none}.free-slot .slot-dot{display:none}.free-slot .card{pointer-events:none}.free-slot img{-webkit-user-drag:none;user-select:none}.free-slot.is-moving{will-change:left,top}.free-slot.is-moving,.free-slot.is-moving .card{cursor:grabbing!important}
+
+body.multi-mode{padding:0;overflow:hidden;align-items:stretch}
+body.multi-mode .app{max-width:none;height:100vh}
+body.multi-mode .header{position:fixed;top:15px;left:50%;z-index:5;margin:0;transform:translateX(-50%);pointer-events:none}
+body.multi-mode h1{font-size:18px;letter-spacing:.32em;white-space:nowrap}
+body.multi-mode .header-deco{margin:0}.multi-mode .deco-line{width:34px}
+body.multi-mode #gameArea{display:block!important;height:100vh}
+body.multi-mode .state-msg{position:fixed;top:62px;left:50%;z-index:6;width:min(90vw,560px);margin:0;transform:translateX(-50%);font-size:11px;pointer-events:none}
+body.multi-mode .spread-area,body.multi-mode .divider{display:none}
+body.multi-mode .multi-workspace{display:block}
+body.multi-mode .deck-area{position:fixed;z-index:14;bottom:14px;left:50%;margin:0;transform:translateX(-50%)}
+body.multi-mode .action-row{display:none}
+.btn-restart-free{display:none;position:fixed;top:92px;right:16px;z-index:16}body.multi-mode .btn-restart-free{display:block}
+.btn-flip-free{display:none;position:fixed;top:142px;right:16px;z-index:16;padding:8px 22px;background:#534AB7;border:none;border-radius:99px;color:#fff;font-size:10px;cursor:pointer;letter-spacing:.08em;transition:background .2s}.btn-flip-free:hover{background:#6a62d4}body.multi-mode .btn-flip-free{display:block}
+@media (max-width:560px){.mode-switch{top:10px;left:10px}.canvas-toolbar{top:10px;right:10px}.free-canvas{bottom:0}body.multi-mode .deck-area{bottom:9px}body.multi-mode .header{display:none}body.multi-mode .state-msg{top:58px}}
 
 /* Card */
 .card{perspective:1200px;position:absolute;inset:0}
@@ -403,18 +433,257 @@ h1{color:#000}
 .fan-card:hover .fan-card-star{color:#000;text-shadow:none}
 .fan-remaining-badge{color:#000;background:#fff;border-color:#000}
 
+
+/* History and workspace tools */
+.spread-history-layout{position:relative}
+.three-history{position:absolute;left:calc(100% + 24px);top:0;width:280px;display:flex;flex-direction:column;max-height:min(var(--history-max-height,430px),calc(100dvh - 120px));overflow:hidden;padding:18px;border:1px solid #ddd;border-radius:12px;background:#fff;color:#111}
+.three-history-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-shrink:0}
+.three-history-actions{display:flex;gap:8px;margin-bottom:16px;flex-shrink:0}
+#threeCardHistoryList{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#999 #eee}
+#threeCardHistoryList::-webkit-scrollbar{width:8px}
+#threeCardHistoryList::-webkit-scrollbar-track{background:#eee;border-radius:8px}
+#threeCardHistoryList::-webkit-scrollbar-thumb{background:#999;border-radius:8px}
+.history-spread{padding:8px 0}
+.history-spread + .history-spread{border-top:1px solid #eee}
+.history-spread-title{font-size:11px;font-weight:500;margin-bottom:3px}
+.three-history-heading h2{font-size:13px;font-weight:600;letter-spacing:.03em}
+.history-clear{flex-shrink:0;border:1px solid #ccc;border-radius:6px;padding:6px 8px;background:#fff;color:#555;font:11px 'Segoe UI',system-ui,sans-serif;cursor:pointer}
+.history-clear:hover{border-color:#111;color:#111}.history-clear:disabled{opacity:.4;cursor:default}
+.history-empty{font-size:12px;line-height:1.6;color:#777}
+.history-batch{padding:12px 0;border-top:1px solid #eee}
+.history-batch:first-child{padding-top:0;border-top:0}
+.history-batch-title{font-size:11px;font-weight:600;margin-bottom:5px}
+.history-time{display:block;color:#777;font-size:10px;line-height:1.5;margin-bottom:6px}
+.history-card-names{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.free-slot.is-selected{outline:3px solid #4869bc;outline-offset:5px;border-radius:11px}
+.free-slot.is-selected::before{content:'✓';position:absolute;top:-12px;right:-12px;z-index:60;width:23px;height:23px;border-radius:50%;background:#4869bc;color:#fff;text-align:center;font:600 15px/23px system-ui;pointer-events:none}
+.free-note{position:absolute;width:max-content;min-width:0;max-width:none;overflow:hidden;padding:7.65px 10.2px;border:1px solid transparent;border-radius:5.95px;background:rgba(255,255,255,.92);color:#111;font:18px/1.275 'Segoe UI',system-ui,sans-serif;white-space:pre-wrap;overflow-wrap:anywhere;cursor:grab;touch-action:none;user-select:none}
+.free-note.is-moving{cursor:grabbing;will-change:left,top}
+.free-note.is-selected{outline:2px solid #4869bc;outline-offset:3px}
+.free-note.is-editing{border-color:#4869bc;cursor:text;touch-action:manipulation;user-select:text;outline:2px solid rgba(72,105,188,.2)}
+.free-note:empty::before{content:attr(data-placeholder);color:#888;pointer-events:none}
+.workspace-shortcuts{position:fixed;top:92px;left:16px;z-index:15;width:360px;max-width:calc(100vw - 175px);padding:7px 10px;border-radius:7px;background:rgba(255,255,255,.88);color:#555;font-size:10px;line-height:1.6;pointer-events:none}
+body.multi-mode .spread-history-layout{display:none}
+@media (max-width:1319px) and (min-width:761px){
+  .app{max-width:1040px}
+  .spread-history-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start}
+  .three-history{position:static;width:auto}
+}
+@media (max-width:760px){
+  .spread-history-layout{display:flex;flex-direction:column}
+  .spread-area{width:100%}
+  .three-history{position:static;width:100%;margin-bottom:24px}
+  .workspace-shortcuts{left:10px;font-size:9px}
+}
+</style>
+<style id="vallue-orbit-theme">
+:root{--orbit-card-back:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20170%20290%22%3E%3Crect%20width%3D%22170%22%20height%3D%22290%22%20rx%3D%2210%22%20fill%3D%22%23fffdf8%22%2F%3E%3Crect%20x%3D%227%22%20y%3D%227%22%20width%3D%22156%22%20height%3D%22276%22%20rx%3D%225%22%20fill%3D%22none%22%20stroke%3D%22%23c4ab8e%22%20stroke-width%3D%221%22%2F%3E%3Crect%20x%3D%2211%22%20y%3D%2211%22%20width%3D%22148%22%20height%3D%22268%22%20rx%3D%223%22%20fill%3D%22none%22%20stroke%3D%22%23dbc9b3%22%20stroke-width%3D%22.65%22%2F%3E%3Cg%20transform%3D%22translate(85%20145)%20rotate(28)%22%3E%3Cellipse%20rx%3D%2234%22%20ry%3D%2277%22%20fill%3D%22none%22%20stroke%3D%22%23b3916e%22%20stroke-width%3D%22.85%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%22-77%22%20r%3D%223%22%20fill%3D%22%23b3916e%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%2277%22%20r%3D%223%22%20fill%3D%22%23b3916e%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M85%20129L87%20143L98%20145L87%20147L85%20161L83%20147L72%20145L83%20143Z%22%20fill%3D%22%23b3916e%22%2F%3E%3C%2Fsvg%3E")}
+/* Vallue Orbit — presentation layer, shared by both reading modes. */
+:root{--paper:#fdfbf8;--white:#fff;--ink:#49372b;--muted:#82776e;--line:#e4d9cc;--sand:#eee5da;--accent:#ad8b6b;--primary:#59412f;--page-gutter:clamp(24px,4vw,72px);--history-width:310px;--layout-gap:44px}
+body{display:block;padding:0 var(--page-gutter) 40px;background:var(--paper);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{display:none}#stars{display:none}
+button{font-family:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:5px}
+button:disabled{cursor:default}
+.site-header{position:relative;z-index:320;display:flex;align-items:center;justify-content:space-between;gap:24px;height:116px;border-bottom:1px solid var(--line);background:var(--paper)}
+.brand{display:flex;align-items:center;gap:24px;min-width:0}
+.brand-logo{width:80px;height:86px;object-fit:contain;mix-blend-mode:multiply;flex-shrink:0;user-select:none;-webkit-user-drag:none}
+.brand h1,body.multi-mode .brand h1{font:400 clamp(16px,1.75vw,25px)/1.4 'Segoe UI',system-ui,sans-serif;letter-spacing:.27em;color:var(--ink);white-space:nowrap}
+.mode-switch{position:static;z-index:auto;flex-shrink:0;gap:2px;padding:4px;background:var(--sand);border:1px solid transparent;box-shadow:none;backdrop-filter:none}
+.mode-switch button{min-width:100px;padding:13px 23px;color:var(--ink);font:500 13px/1.2 'Segoe UI',system-ui,sans-serif;letter-spacing:.09em}
+.mode-switch button:hover{color:var(--ink);background:#e2d5c5}
+.mode-switch button.active{background:var(--primary);color:#fffaf4;box-shadow:none}
+.app{max-width:1600px;margin:0 auto;width:100%}
+#gameArea{padding-top:36px;position:relative}
+.spread-history-layout{display:grid;grid-template-columns:minmax(0,1fr) var(--history-width);gap:var(--layout-gap);align-items:start}
+.reading-panel{position:relative;isolation:isolate;min-width:0;min-height:650px}
+.workspace-heading{position:relative;z-index:1;margin-bottom:44px}
+.section-title{display:flex;align-items:center;gap:18px;font-size:17px;line-height:1.5;font-weight:500;letter-spacing:.19em}
+.section-title::before{content:'';width:36px;height:1px;flex-shrink:0;background:var(--accent)}
+.state-msg{margin:10px 0 0 54px;text-align:left;min-height:22px;font-size:13px;line-height:1.65;letter-spacing:0;color:var(--muted)}
+.orbit-art{position:absolute;z-index:-1;pointer-events:none;width:100%;height:630px;left:0;top:0;overflow:visible;user-select:none}
+.orbit-field{fill:#f3eee6}.orbit-line{fill:none;stroke:#baa087;stroke-width:1;opacity:.72}.orbit-dot{fill:#ae8b6b}
+.spread-area{position:relative;flex-wrap:nowrap;align-items:flex-start;gap:clamp(16px,3.5vw,48px);padding:38px 12px 0;margin:0;min-height:0}
+.slot-wrap{gap:11px;flex-shrink:0}
+.slot{background:rgba(255,255,255,.6);border:1px dashed #c6b39f;border-radius:10px}
+.slot-dot{width:5px;height:5px;background:#baa087}
+.slot::after{border-color:var(--accent)}
+.slot.ready{border-color:transparent;box-shadow:none}
+.slot.drag-over,.slot.is-landing{background:#f4ece0;box-shadow:0 0 0 3px #d8c6b3,0 10px 24px #59412f18}
+.slot-num{font-size:13px;color:var(--muted);margin-top:1px;letter-spacing:.025em}
+.card-info{min-height:14px;margin:0;color:var(--muted);max-width:170px}
+.card-info .ci-name{color:var(--muted);font-size:11px}
+.card.placed{box-shadow:0 5px 16px #49372b18}
+.card.placed::after{box-shadow:0 0 20px #ad8b6b33}
+.card.placed::before{box-shadow:0 14px 22px #49372b20}
+.card-face{background:#fffdf8;border:1px solid #c9b79f;border-radius:10px}
+.card-img-wrap{inset:5px;border-radius:5px}
+.card-img-wrap img{border-radius:4px}
+.card-back{background:#fffdf8 var(--orbit-card-back) center/100% 100% no-repeat;border:1px solid #c9b79f;border-radius:10px}
+.card-back::before,.card-back::after,.back-star,.back-corner{display:none}
+.card.placed.can-flip:hover .card-back{border-color:#ad8b6b}
+.fan-card,.flying-card{background:#fffdf8;border:1px solid #c9b79f;box-shadow:0 2px 5px #59412f15;border-radius:10px}
+.flying-card.is-dragging{box-shadow:0 18px 30px #49372b28}
+.action-row{margin:42px 0 28px}
+.btn-finish,.btn-flip-free{min-height:46px;padding:13px 30px;border:1px solid var(--primary);border-radius:999px;font-size:13px;font-weight:500;letter-spacing:.08em;line-height:1.4;background:var(--primary);color:#fffaf4;cursor:pointer;transition:background .18s,box-shadow .18s}
+.btn-finish:hover{background:#73563f;border-color:#73563f;color:#fff;box-shadow:0 5px 14px #59412f16}
+.button-icon{display:inline-block;width:20px;height:20px;margin-right:12px;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+#btnFinish{min-width:212px}
+.three-history{position:relative;left:auto;top:auto;width:100%;margin:0;padding:6px 0 0 30px;border:0;border-left:1px solid var(--line);border-radius:0;background:transparent;color:var(--ink);max-height:min(var(--history-max-height,550px),calc(100dvh - 176px))}
+.three-history-heading{margin-bottom:24px}
+.three-history-heading h2{font-size:15px;font-weight:500;letter-spacing:.13em;line-height:1.6}
+.three-history-actions{gap:10px;margin-bottom:30px}
+.history-clear{border:1px solid #b29a84;border-radius:999px;padding:9px 17px;background:transparent;color:var(--ink);font:400 13px/1.3 'Segoe UI',system-ui,sans-serif;min-height:37px;transition:background .18s,border-color .18s}
+.history-clear:hover:not(:disabled){background:var(--sand);border-color:var(--primary);color:var(--ink)}
+.history-clear:disabled{opacity:.4}
+#clearHistoryBtn{border-color:var(--line);color:#847265}
+#threeCardHistoryList{scrollbar-color:#c1af9a #f2ece4;padding-right:10px}
+#threeCardHistoryList::-webkit-scrollbar-track{background:#f2ece4}
+#threeCardHistoryList::-webkit-scrollbar-thumb{background:#c1af9a}
+.history-empty{font-size:13px;line-height:1.9;color:var(--muted);padding:4px 0 16px}
+.history-batch{padding:22px 0;border-color:var(--line)}
+.history-batch-title{display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;margin-bottom:12px}
+.history-batch-title::before{content:'';width:8px;height:8px;flex-shrink:0;border-radius:50%;background:var(--accent)}
+.history-spread{padding:18px 0}
+.history-spread+.history-spread{border-color:var(--line)}
+.history-spread-title{font-size:15px;font-weight:600;margin-bottom:5px}
+.history-time{font-size:12px;line-height:1.5;color:var(--muted);margin-bottom:8px}
+.history-card-names{font-size:13px;line-height:1.8;color:var(--ink)}
+/* Free canvas keeps the existing board coordinates and pointer handlers. */
+body.multi-mode{padding:0 var(--page-gutter);background:var(--paper)}
+body.multi-mode .site-header{position:relative}
+body.multi-mode .app{height:auto;max-width:1600px}
+body.multi-mode #gameArea{height:auto;padding-top:0}
+body.multi-mode .spread-history-layout{display:block}
+body.multi-mode .reading-panel{display:contents}
+body.multi-mode .reading-panel>.orbit-art,body.multi-mode .three-history{display:none}
+body.multi-mode .workspace-heading{position:fixed;left:var(--page-gutter);right:420px;top:148px;z-index:16;margin:0;pointer-events:none}
+body.multi-mode .state-msg{position:static;top:auto;left:auto;z-index:auto;width:auto;margin:8px 0 0 54px;transform:none;font-size:12px;line-height:1.6}
+.free-canvas{inset:224px 0 0;background:transparent}
+.free-canvas>.orbit-art{position:fixed;left:3%;top:154px;width:94%;height:calc(100dvh - 200px);z-index:0;opacity:.8}
+.free-canvas-content{z-index:2}
+.free-placement-zone{border:1px dashed #ddcdbb;border-radius:16px;background:none}
+.free-slot.is-selected{outline:2px solid #896649;outline-offset:5px}
+.free-slot.is-selected::before{background:#896649;border:2px solid var(--paper);box-sizing:content-box}
+.free-note{border-color:#c3ad96;background:#fffcf7;color:var(--ink);box-shadow:0 2px 6px #59412f06}
+.free-note.is-selected{outline-color:#a98969}
+.free-note.is-editing{border-color:#9b7858;outline-color:#ad8b6b33}
+.free-note:empty::before{color:var(--muted)}
+body.multi-mode .btn-restart-free{top:148px;right:calc(var(--page-gutter) + 162px)}
+body.multi-mode .btn-flip-free{top:148px;right:var(--page-gutter);background:var(--paper);color:var(--ink);border-color:#a98969;padding:13px 24px}
+.btn-flip-free:hover{background:var(--sand)!important}
+.workspace-shortcuts{top:auto;left:50%;bottom:145px;transform:translateX(-50%);z-index:1;width:auto;max-width:calc(100vw - 60px);padding:6px 14px;text-align:center;border-radius:8px;background:rgba(253,251,248,.92);color:var(--muted);font-size:11px;line-height:1.8}
+body.multi-mode .deck-area{display:none}
+@media (min-width:1800px){.site-header{max-width:1600px;margin:0 auto}}
+@media (max-width:1100px){
+  :root{--page-gutter:28px;--history-width:275px;--layout-gap:28px}
+  .brand{gap:16px}.brand-logo{width:66px;height:78px}.brand h1,body.multi-mode .brand h1{font-size:19px;letter-spacing:.21em}
+  .mode-switch button{min-width:82px;padding:12px 19px}.site-header{height:104px}
+  .spread-area{gap:20px;padding-top:36px;padding-inline:0}.three-history{padding-left:22px}
+  .three-history-heading h2{font-size:13px}.history-clear{padding:8px 12px;font-size:12px}
+  .section-title{font-size:15px}.section-title::before{width:24px}.state-msg{margin-left:42px;font-size:12px}
+  .orbit-art{height:570px}.reading-panel{min-height:570px}
+  body.multi-mode .workspace-heading{top:132px;right:370px}body.multi-mode .state-msg{margin-left:42px}
+  body.multi-mode .btn-restart-free,body.multi-mode .btn-flip-free{top:132px}
+  .free-canvas{top:208px}.free-canvas>.orbit-art{top:140px}
+  .workspace-shortcuts{font-size:10px}
+}
+@media (max-width:760px){
+  :root{--page-gutter:20px;--layout-gap:24px}
+  body{padding-bottom:28px}.site-header{height:88px;gap:12px}.brand{gap:10px}.brand-logo{width:48px;height:62px}
+  .brand h1,body.multi-mode .brand h1{font-size:14px;letter-spacing:.12em;white-space:normal;max-width:170px}
+  .mode-switch{padding:3px}.mode-switch button{min-width:57px;padding:10px 13px;font-size:11px;letter-spacing:.02em}
+  #gameArea{padding-top:26px}.spread-history-layout{display:flex;flex-direction:column;gap:26px}.reading-panel{width:100%;min-height:0;padding-bottom:20px}
+  .workspace-heading{margin-bottom:26px}.section-title{font-size:14px;letter-spacing:.14em;gap:12px}.section-title::before{width:20px}.state-msg{margin-left:32px;font-size:12px}
+  .spread-area{gap:12px;padding:24px 0 0}.slot-wrap{gap:8px}.slot-num{font-size:12px}.card-info .ci-name{font-size:10px}.card-info{max-width:100px}
+  .orbit-art{top:50px;height:380px;width:108%;left:-4%}.card-img-wrap{inset:3px}.action-row{margin:28px 0 6px}
+  .btn-finish,.btn-flip-free{min-height:42px;font-size:12px;padding:11px 22px}#btnFinish{min-width:178px}
+  .three-history{width:100%;padding:24px 0 0;border-left:0;border-top:1px solid var(--line);max-height:var(--history-max-height,520px)}
+  .three-history-heading{margin-bottom:16px}.three-history-heading h2{font-size:14px}.three-history-actions{margin-bottom:22px}.history-clear{padding:9px 16px;font-size:13px}
+  .history-spread{padding:16px 0}.history-spread-title{font-size:14px}.history-card-names{font-size:13px}
+  body:has(#fanOverlay.open):not(.multi-mode) .reading-panel{padding-bottom:280px}
+  body.multi-mode .workspace-heading{top:112px;left:20px;right:20px}
+  body.multi-mode .state-msg{margin:7px 0 0 32px;font-size:11px;max-width:95%}
+  body.multi-mode .btn-restart-free{top:184px;left:20px;right:auto}
+  body.multi-mode .btn-flip-free{top:184px;right:20px;padding:11px 22px}
+  .free-canvas{top:242px}.free-canvas>.orbit-art{top:248px;height:calc(100dvh - 390px);width:110%;left:-5%}
+  .workspace-shortcuts{bottom:100px;width:calc(100% - 24px);max-width:none;font-size:9px;line-height:1.65;padding:5px 8px}
+}
+@media (max-width:400px){.brand h1,body.multi-mode .brand h1{font-size:11px;letter-spacing:.13em;max-width:112px}.brand{gap:8px}.mode-switch button{min-width:49px;padding:10px 9px}.site-header{gap:8px}.brand-logo{width:44px}}
+@media (min-width:761px) and (max-height:850px){
+  .site-header{height:90px}.brand-logo{height:72px;width:66px}#gameArea{padding-top:24px}
+  .workspace-heading{margin-bottom:12px}.spread-area{padding-top:18px}.reading-panel{min-height:520px}.orbit-art{height:500px}.action-row{margin-top:24px}
+  .three-history{max-height:min(var(--history-max-height,550px),calc(100dvh - 135px))}
+  .history-spread{padding:13px 0}.three-history-actions{margin-bottom:20px}.three-history-heading{margin-bottom:16px}
+  body.multi-mode .workspace-heading,body.multi-mode .btn-restart-free,body.multi-mode .btn-flip-free{top:116px}.free-canvas{top:190px}
+  .workspace-shortcuts{bottom:140px;font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){button{transition:none!important}}
+
+</style>
+<style id="vallue-compact-theme">
+/* Compact reading layout and contact link. The free board retains its dimensions. */
+.workspace-heading{margin-bottom:32px}
+.instagram-link{display:inline-flex;align-items:center;gap:8px;padding:3px 0;color:var(--muted);font-size:13px;font-weight:400;line-height:1.5;text-decoration:none;letter-spacing:.015em;pointer-events:auto;transition:color .16s}
+.instagram-link svg{width:17px;height:17px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.6}
+.instagram-link:hover{color:var(--primary)}
+.instagram-link:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:3px}
+#stateMsg{display:none!important}
+.reading-panel{min-height:500px}
+.reading-panel>.orbit-art{width:75%;left:12.5%;height:472.5px;top:8px}
+#spreadArea{gap:clamp(12px,2.625vw,36px);padding-top:28px}
+#spreadArea .card.placed{inset:0;margin:auto}
+.action-row{margin-top:32px}
+body.multi-mode .workspace-heading{right:auto;pointer-events:auto}
+body.multi-mode .btn-restart-free,body.multi-mode .btn-flip-free{transform:scale(.75);transform-origin:top right}
+body.multi-mode .btn-restart-free{right:calc(var(--page-gutter) + 112px)}
+.workspace-shortcuts{top:236px;right:var(--page-gutter);bottom:auto;left:auto;width:178px;max-width:none;transform:none;padding:16px;text-align:left;border:1px solid var(--line);border-radius:10px;background:rgba(253,251,248,.96);font-size:11px;line-height:1.45;pointer-events:none}
+.shortcuts-title{font-size:10px;letter-spacing:.13em;font-weight:600;color:var(--ink);margin-bottom:14px}
+.shortcut-row+.shortcut-row{margin-top:11px}
+.shortcut-row span{display:block}
+.shortcut-key{font-size:11px;font-weight:600;color:#6b5340;margin-bottom:2px}
+.shortcut-action{font-size:10px;color:var(--muted)}
+@media (max-width:1100px){
+  .reading-panel{min-height:440px}.reading-panel>.orbit-art{height:427.5px}
+  #spreadArea{gap:15px;padding-top:27px}
+  .workspace-shortcuts{top:214px;width:164px;padding:14px}
+}
+@media (max-width:760px){
+  .workspace-heading{margin-bottom:24px}.instagram-link{font-size:12px;gap:7px}.instagram-link svg{width:16px;height:16px}
+  .reading-panel{min-height:0;padding-bottom:18px}.reading-panel>.orbit-art{top:24px;height:285px;width:81%;left:9.5%}
+  #spreadArea{gap:9px;padding-top:18px}.action-row{margin-top:21px}
+  body:has(#fanOverlay.open):not(.multi-mode) .reading-panel{padding-bottom:210px}
+  body.multi-mode .workspace-heading{right:auto}
+  body.multi-mode .btn-restart-free{left:20px;right:auto;transform-origin:top left}
+  .workspace-shortcuts{top:254px;right:12px;bottom:auto;left:auto;width:126px;max-width:none;padding:10px;border-radius:8px}
+  .shortcuts-title{font-size:9px;letter-spacing:.07em;margin-bottom:10px}
+  .shortcut-key,.shortcut-action{font-size:9px;line-height:1.4}.shortcut-key{margin-bottom:1px}
+  .shortcut-row+.shortcut-row{margin-top:7px}
+}
+@media (min-width:761px) and (max-height:850px){
+  .workspace-heading{margin-bottom:12px}.reading-panel{min-height:400px}.reading-panel>.orbit-art{height:375px}
+  #spreadArea{padding-top:14px}.action-row{margin-top:18px}
+  .workspace-shortcuts{top:192px;padding:12px 14px}.shortcuts-title{margin-bottom:10px}.shortcut-row+.shortcut-row{margin-top:8px}
+}
+@media (max-width:760px) and (max-height:700px){
+  .workspace-shortcuts{padding:9px;width:122px}.shortcuts-title{margin-bottom:7px}.shortcut-row+.shortcut-row{margin-top:5px}
+}
+
 </style>
 </head>
 <body>
 <div id="stars"></div>
+<header class="site-header">
+  <div class="brand"><img class="brand-logo" src="assets/vallue-logo.jpg" alt="" width="80" height="86" draggable="false"><h1>TAROT BY VALLUE</h1></div>
+  <div class="mode-switch" role="group" aria-label="Chế độ bốc bài">
+  <button type="button" id="modeThreeBtn" class="active" aria-pressed="true" onclick="setDrawMode('three')">3 LÁ</button>
+  <button type="button" id="modeFreeBtn" aria-pressed="false" onclick="setDrawMode('free')">78 LÁ</button>
+</div>
+</header>
 <div class="app">
 
   <!-- ══ HEADER (always visible) ══ -->
-  <div class="header">
-    <div class="header-deco">
-      <div class="deco-line"></div><h1>TAROT</h1><div class="deco-line r"></div>
-    </div>
-  </div>
+
 
   <!-- ══ SETUP WIZARD ══ -->
   <div id="setupWizard">
@@ -481,10 +750,40 @@ h1{color:#000}
   <!-- ══ GAME AREA ══ -->
   <div id="gameArea">
 
-    <div class="state-msg" id="stateMsg">Kéo một lá bài vào ô số 1</div>
+    
+
+    <div class="multi-workspace" id="multiWorkspace" aria-label="Bàn trải bài tự do">
+      
+
+
+      <div class="free-canvas" id="freeCanvas">
+        <svg class="orbit-art" viewBox="0 0 900 650" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><ellipse class="orbit-field" cx="450" cy="335" rx="378" ry="310"/><g transform="rotate(-23 450 330)"><ellipse class="orbit-line" cx="450" cy="330" rx="456" ry="172"/><circle class="orbit-dot" cx="792" cy="216" r="6"/></g></svg>
+        <aside class="workspace-shortcuts" aria-label="Hướng dẫn thao tác"><div class="shortcuts-title">THAO TÁC TRÊN BÀN</div><p class="shortcut-row"><span class="shortcut-key">Shift + nhấp</span><span class="shortcut-action">Chọn nhiều lá</span></p><p class="shortcut-row"><span class="shortcut-key">Kéo lá bài</span><span class="shortcut-action">Di chuyển lá hoặc nhóm</span></p><p class="shortcut-row"><span class="shortcut-key">Enter</span><span class="shortcut-action">Lật nhóm đã chọn</span></p><p class="shortcut-row"><span class="shortcut-key">Space</span><span class="shortcut-action">Lật tất cả</span></p><p class="shortcut-row"><span class="shortcut-key">Nhấp đúp khoảng trống</span><span class="shortcut-action">Thêm ghi chú</span></p><p class="shortcut-row"><span class="shortcut-key">Kéo ghi chú</span><span class="shortcut-action">Di chuyển ghi chú</span></p><p class="shortcut-row"><span class="shortcut-key">Nhấp đúp ghi chú</span><span class="shortcut-action">Sửa nội dung</span></p><p class="shortcut-row"><span class="shortcut-key">Delete</span><span class="shortcut-action">Xóa ghi chú đã chọn</span></p></aside>
+        <div class="free-canvas-content" id="freeCanvasContent"></div>
+      </div>
+    </div>
 
     <!-- Spread slots -->
-    <div class="spread-area" id="spreadArea"></div>
+    <div class="spread-history-layout">
+      <section class="reading-panel" aria-label="Bàn trải bài">
+        <div class="workspace-heading"><a class="instagram-link" href="https://www.instagram.com/tarotbyvallue/" target="_blank" rel="noopener noreferrer" aria-label="Instagram tarotbyvallue (mở tab mới)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>tarotbyvallue</span></a><div class="state-msg" id="stateMsg" hidden></div></div>
+        <svg class="orbit-art" viewBox="0 0 900 650" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><ellipse class="orbit-field" cx="450" cy="335" rx="378" ry="310"/><g transform="rotate(-23 450 330)"><ellipse class="orbit-line" cx="450" cy="330" rx="456" ry="172"/><circle class="orbit-dot" cx="792" cy="216" r="6"/></g></svg>
+        <div class="spread-area" id="spreadArea"></div>
+    <div class="action-row">
+      <button class="btn-finish" id="btnFinish" onclick="restartWizard()"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7a8 8 0 0 0-14-1L3 9m0-5v5h5M4 17a8 8 0 0 0 14 1l3-3m0 5v-5h-5"/></svg>TRẢI MỚI</button>
+    </div>
+      </section>
+      <aside class="three-history" aria-label="Lịch sử rút bài 3 lá">
+        <div class="three-history-heading">
+          <h2>LỊCH SỬ RÚT BÀI</h2>
+        </div>
+        <div class="three-history-actions">
+          <button type="button" class="history-clear" id="newHistoryBatchBtn" onclick="startNewHistoryBatch()" disabled>Đợt mới</button>
+          <button type="button" class="history-clear" id="clearHistoryBtn" onclick="clearThreeCardHistory()" disabled>Xóa toàn bộ</button>
+        </div>
+        <div id="threeCardHistoryList" aria-live="polite"><p class="history-empty">Chưa có trải bài nào. Lịch sử sẽ được xóa khi tải lại trang.</p></div>
+      </aside>
+    </div>
 
     <div class="divider"></div>
 
@@ -501,10 +800,11 @@ h1{color:#000}
       <div class="deck-hint">Bộ bài</div>
     </div>
 
+    <button type="button" class="btn-finish btn-restart-free" id="btnRestartFree" onclick="restartWizard()"><svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7a8 8 0 0 0-14-1L3 9m0-5v5h5M4 17a8 8 0 0 0 14 1l3-3m0 5v-5h-5"/></svg>TRẢI MỚI</button>
+    <button type="button" class="btn-flip-free" id="btnFlipFree" onclick="flipAllFreeCards()">LẬT TẤT CẢ</button>
+
     <!-- Action buttons -->
-    <div class="action-row">
-      <button class="btn-finish" id="btnFinish" onclick="restartWizard()">TRẢI MỚI</button>
-    </div>
+
   </div>
 
 </div><!-- .app -->
@@ -536,9 +836,11 @@ function getPosLabel(n, i){
 function cardSize(n){
   if(n<=2) return {w:150,h:245};
   if(n<=3){
-    const viewport=Math.min(window.innerWidth||700,700);
-    const responsiveW=Math.floor((viewport-32-28)/3);
-    const w=Math.max(72,Math.min(138,responsiveW));
+    const viewport=window.innerWidth||1000;
+    const available=viewport<=760?viewport-40-24:viewport<=1100?viewport-56-275-28-40:viewport-2*Math.min(72,viewport*.04)-310-44-120;
+    const responsiveW=Math.floor(available/3);
+    const heightLimit=viewport>760&&window.innerHeight<=850?Math.max(100,Math.min(172,Math.floor((window.innerHeight-460)*138/228))):200;
+    const w=Math.max(72,Math.min(heightLimit,responsiveW));
     return {w,h:Math.round(w*228/138)};
   }
   if(n<=4) return {w:116,h:192};
@@ -551,8 +853,674 @@ function cardSize(n){
 /* ════════════════════════════════
    WIZARD STATE
 ════════════════════════════════ */
-// Cấu hình cố định: 1 trải bài, 3 lá.
+// Chế độ mặc định luôn là một trải 3 lá. Chế độ tự do dùng chung bộ 78 lá.
 let cfg = {totalSpreads:1, cardsPerSpread:3};
+let drawMode='three';
+const FREE_BOARD_W=3300, FREE_BOARD_H=1600, FREE_CARD_W=153, FREE_CARD_H=253;
+const FREE_ZOOM_MIN=.35, FREE_ZOOM_MAX=1.75, FREE_ZOOM_DEFAULT=.75, FREE_ZOOM_STEP=.05;
+let freeZoom=FREE_ZOOM_DEFAULT, freePanX=0, freePanY=0, freePanState=null, freePanRaf=0, freeCardDragState=null, freeCardDragRaf=0, freeCardZ=0, freeZoomEditing=false;
+
+
+const selectedFreeSlots=new Set();
+let selectedFreeNote=null, freeNoteDragState=null, freeNoteDragRaf=0;
+let threeCardHistory=[], currentHistorySpreads=[], historyBatchSequence=0, activeHistorySpread=null;
+
+function isFreeMode(){return drawMode==='free';}
+
+function compactCardName(name){
+  const numbers={Two:2,Three:3,Four:4,Five:5,Six:6,Seven:7,Eight:8,Nine:9,Ten:10};
+  return name.replace(/^(Two|Three|Four|Five|Six|Seven|Eight|Nine|Ten)(?= of )/i,word=>numbers[word[0].toUpperCase()+word.slice(1).toLowerCase()]);
+}
+
+function initHistoryPanelSize(){
+  const panel=document.querySelector('.three-history');
+  const list=document.getElementById('threeCardHistoryList');
+  const initialHeight=panel.getBoundingClientRect().height;
+  const section=document.createElement('section');section.className='history-batch';
+  const title=document.createElement('div');title.className='history-batch-title';title.textContent='Đợt hiện tại';section.appendChild(title);
+  for(let i=0;i<3;i++){
+    const row=document.createElement('article');row.className='history-spread';
+    const label=document.createElement('div');label.className='history-spread-title';label.textContent='Trải '+(i+1);
+    const time=document.createElement('time');time.className='history-time';time.textContent=new Date().toLocaleString('vi-VN',{hour12:false});
+    const names=document.createElement('p');names.className='history-card-names';names.textContent='Knight of Pentacles, Queen of Pentacles, The High Priestess';
+    row.append(label,time,names);section.appendChild(row);
+  }
+  list.replaceChildren(section);
+  panel.style.maxHeight='none';
+  const threeSpreadHeight=panel.getBoundingClientRect().height;
+  panel.style.maxHeight='';
+  panel.style.setProperty('--history-max-height',Math.ceil(Math.max(initialHeight*1.8,threeSpreadHeight))+'px');
+  renderThreeCardHistory();
+}
+
+function renderThreeCardHistory(){
+  const list=document.getElementById('threeCardHistoryList');
+  const scrollTop=list.scrollTop;
+  list.replaceChildren();
+  document.getElementById('clearHistoryBtn').disabled=threeCardHistory.length===0&&currentHistorySpreads.length===0;
+  document.getElementById('newHistoryBatchBtn').disabled=currentHistorySpreads.length===0;
+  if(!threeCardHistory.length&&!currentHistorySpreads.length){
+    const empty=document.createElement('p');empty.className='history-empty';
+    empty.textContent='Chưa có trải bài nào. Lịch sử sẽ được xóa khi tải lại trang.';
+    list.appendChild(empty);
+    return;
+  }
+  const appendBatch=(titleText,spreads,current=false)=>{
+    const section=document.createElement('section');
+    section.className='history-batch'+(current?' history-current-batch':'');
+    const title=document.createElement('div');title.className='history-batch-title';title.textContent=titleText;
+    section.appendChild(title);
+    [...spreads].reverse().forEach(spread=>{
+      const row=document.createElement('article');row.className='history-spread';
+      const label=document.createElement('div');label.className='history-spread-title';label.textContent='Trải '+spread.number;
+      const time=document.createElement('time');time.className='history-time';
+      time.dateTime=spread.drawnAt.toISOString();time.textContent=spread.drawnAt.toLocaleString('vi-VN',{hour12:false});
+      const names=document.createElement('p');names.className='history-card-names';
+      names.textContent=spread.revealed?spread.cards.map(compactCardName).join(', '):'Đã rút đủ 3 lá · Chờ lật bài';
+      row.append(label,time,names);section.appendChild(row);
+    });
+    list.appendChild(section);
+  };
+  if(currentHistorySpreads.length) appendBatch('Đợt hiện tại',currentHistorySpreads,true);
+  [...threeCardHistory].reverse().forEach(batch=>appendBatch('Đợt '+batch.number,batch.spreads));
+  list.scrollTop=scrollTop;
+}
+
+function saveThreeCardHistory(){
+  if(isFreeMode()||cfg.cardsPerSpread!==3||currentDraw.length!==3||activeHistorySpread) return;
+  activeHistorySpread={number:currentHistorySpreads.length+1,drawnAt:new Date(),cards:currentDraw.map(card=>card.name),revealed:false};
+  currentHistorySpreads.push(activeHistorySpread);
+  renderThreeCardHistory();
+}
+
+function startNewHistoryBatch(){
+  if(isFreeMode()||!currentHistorySpreads.length||isAnimating||revealAnimating||dragState) return;
+  currentHistorySpreads.forEach(spread=>{spread.revealed=true;});
+  threeCardHistory.push({number:++historyBatchSequence,savedAt:new Date(),spreads:currentHistorySpreads.slice()});
+  currentHistorySpreads=[];
+  activeHistorySpread=null;
+  renderThreeCardHistory();
+  restartWizard();
+}
+
+function clearThreeCardHistory(){
+  threeCardHistory=[];
+  currentHistorySpreads=[];
+  historyBatchSequence=0;
+  activeHistorySpread=null;
+  renderThreeCardHistory();
+}
+
+function clearFreeCardSelection(){
+  selectedFreeSlots.forEach(slot=>{slot.classList.remove('is-selected');slot.setAttribute('aria-selected','false');});
+  selectedFreeSlots.clear();
+}
+
+function selectFreeSlot(slot,selected){
+  if(selected) selectedFreeSlots.add(slot); else selectedFreeSlots.delete(slot);
+  slot.classList.toggle('is-selected',selected);
+  slot.setAttribute('aria-selected',String(selected));
+}
+
+function selectFreeNote(note){
+  if(selectedFreeNote) selectedFreeNote.classList.remove('is-selected');
+  selectedFreeNote=note;
+  if(note){clearFreeCardSelection();note.classList.add('is-selected');}
+}
+
+function normalizeFreeNoteText(text){
+  return text.replace(/\r\n?/g,'\n').split('\n').map(line=>line.replace(/[^\S\n]+$/g,'')).join('\n');
+}
+
+function fitFreeNote(note){
+  if(!note.isConnected) return;
+  const text=normalizeFreeNoteText(note.innerText);
+  const measure=document.createElement('div');measure.className='free-note';
+  const maxWidth=Math.max(24,FREE_BOARD_W-(parseFloat(note.style.left)||0));
+  measure.style.cssText='position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;transform:none;width:max-content;max-width:'+maxWidth+'px;height:auto;';
+  measure.textContent=text||note.dataset.placeholder||' ';
+  document.body.appendChild(measure);
+  const rect=measure.getBoundingClientRect();
+  note.style.width=Math.ceil(rect.width)+'px';
+  note.style.height=Math.ceil(rect.height)+'px';
+  note.style.maxWidth=maxWidth+'px';
+  measure.remove();
+}
+
+function editFreeNote(note){
+  if(!note||!note.isConnected) return;
+  selectFreeNote(note);
+  note.contentEditable='true';
+  note.classList.add('is-editing');
+  note.dataset.beforeEdit=note.innerText;
+  fitFreeNote(note);
+  note.focus();
+  const range=document.createRange();
+  range.selectNodeContents(note);
+  range.collapse(false);
+  const selection=window.getSelection();
+  selection.removeAllRanges();selection.addRange(range);
+}
+
+function finishFreeNoteEdit(note,cancel=false){
+  if(note.contentEditable!=='true') return;
+  const text=cancel?(note.dataset.beforeEdit||''):note.innerText;
+  note.textContent=normalizeFreeNoteText(text);
+  note.contentEditable='false';
+  note.classList.remove('is-editing');
+  delete note.dataset.beforeEdit;
+  fitFreeNote(note);
+  if(!note.textContent.trim()){
+    if(selectedFreeNote===note) selectFreeNote(null);
+    note.remove();
+  }
+}
+
+function bindFreeNoteDrag(note){
+  const renderDrag=()=>{
+    freeNoteDragRaf=0;
+    const state=freeNoteDragState;
+    if(!state||state.note!==note||!state.moved) return;
+    const point=freeBoardPointFromClient(state.lastClientX,state.lastClientY);
+    note.style.left=clamp(point.x-state.grabX,0,Math.max(0,FREE_BOARD_W-note.offsetWidth)).toFixed(2)+'px';
+    note.style.top=clamp(point.y-state.grabY,0,Math.max(0,FREE_BOARD_H-note.offsetHeight)).toFixed(2)+'px';
+  };
+  const stopDrag=e=>{
+    const state=freeNoteDragState;
+    if(!state||state.note!==note||state.pointerId!==e.pointerId) return;
+    if(e.type==='pointerup'&&Number.isFinite(e.clientX)){
+      state.lastClientX=e.clientX;state.lastClientY=e.clientY;
+      if(Math.hypot(e.clientX-state.startClientX,e.clientY-state.startClientY)>4) state.moved=true;
+    }
+    if(freeNoteDragRaf){cancelAnimationFrame(freeNoteDragRaf);freeNoteDragRaf=0;}
+    renderDrag();
+    freeNoteDragState=null;note.classList.remove('is-moving');
+    if(state.moved) fitFreeNote(note);
+    if(state.moved){
+      note.dataset.skipClick='true';
+      setTimeout(()=>{if(note.isConnected) delete note.dataset.skipClick;},0);
+    }
+  };
+  note.addEventListener('pointerdown',e=>{
+    e.stopPropagation();
+    if(!isFreeMode()||e.button!==0||isAnimating||revealAnimating||dragState||freeCardDragState) return;
+    selectFreeNote(note);
+    if(note.contentEditable==='true') return;
+    e.preventDefault();note.focus({preventScroll:true});
+    const point=freeBoardPointFromClient(e.clientX,e.clientY);
+    freeNoteDragState={note,pointerId:e.pointerId,
+      grabX:point.x-(parseFloat(note.style.left)||0),grabY:point.y-(parseFloat(note.style.top)||0),
+      startClientX:e.clientX,startClientY:e.clientY,lastClientX:e.clientX,lastClientY:e.clientY,moved:false};
+    note.style.zIndex=String(++freeCardZ);
+    if(note.setPointerCapture){try{note.setPointerCapture(e.pointerId)}catch(_){} }
+  });
+  note.addEventListener('pointermove',e=>{
+    const state=freeNoteDragState;
+    if(!state||state.note!==note||state.pointerId!==e.pointerId) return;
+    state.lastClientX=e.clientX;state.lastClientY=e.clientY;
+    if(Math.hypot(e.clientX-state.startClientX,e.clientY-state.startClientY)>4){state.moved=true;note.classList.add('is-moving');}
+    if(!freeNoteDragRaf) freeNoteDragRaf=requestAnimationFrame(renderDrag);
+    if(e.cancelable) e.preventDefault();
+  });
+  note.addEventListener('pointerup',stopDrag);
+  note.addEventListener('pointercancel',stopDrag);
+  note.addEventListener('lostpointercapture',stopDrag);
+  note.addEventListener('dragstart',e=>e.preventDefault());
+}
+
+function addFreeNote(clientX,clientY){
+  const point=freeBoardPointFromClient(clientX,clientY);
+  if(point.x<0||point.y<0||point.x>FREE_BOARD_W||point.y>FREE_BOARD_H) return;
+  const note=document.createElement('div');
+  note.className='free-note';
+  note.tabIndex=0;
+  note.setAttribute('role','textbox');
+  note.setAttribute('aria-label','Ghi chú trên bàn trải');
+  note.setAttribute('aria-multiline','true');
+  note.dataset.placeholder='Nhập ghi chú…';
+  note.style.left=clamp(point.x,0,FREE_BOARD_W-119)+'px';
+  note.style.top=clamp(point.y,0,FREE_BOARD_H-51)+'px';
+  note.addEventListener('input',()=>fitFreeNote(note));
+  note.style.zIndex=String(++freeCardZ);
+  bindFreeNoteDrag(note);
+  note.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(note.dataset.skipClick==='true'){delete note.dataset.skipClick;return;}
+    selectFreeNote(note);
+  });
+  note.addEventListener('dblclick',e=>{e.preventDefault();e.stopPropagation();editFreeNote(note);});
+  note.addEventListener('blur',()=>finishFreeNoteEdit(note));
+  note.addEventListener('keydown',e=>{
+    if(note.contentEditable!=='true') return;
+    e.stopPropagation();
+    if(e.key==='Escape'){e.preventDefault();finishFreeNoteEdit(note,true);note.blur();}
+    else if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();finishFreeNoteEdit(note);note.blur();}
+  });
+  note.addEventListener('paste',e=>{
+    if(note.contentEditable!=='true') return;
+    e.preventDefault();
+    const selection=window.getSelection();
+    if(!selection.rangeCount) return;
+    const range=selection.getRangeAt(0);
+    if(!note.contains(range.commonAncestorContainer)) return;
+    range.deleteContents();
+    const text=document.createTextNode(e.clipboardData.getData('text/plain'));
+    range.insertNode(text);range.setStartAfter(text);range.collapse(true);
+    selection.removeAllRanges();selection.addRange(range);
+    fitFreeNote(note);
+  });
+  document.getElementById('freeCanvasContent').appendChild(note);
+  editFreeNote(note);
+}
+
+function drawLimit(){return isFreeMode()?CARD_KEYS.length:cfg.cardsPerSpread;}
+function canDrawMore(){return remaining.length>0&&dealtSlots<drawLimit();}
+function spreadSlotSize(n){
+  const {w,h}=cardSize(n);
+  return {w:Math.round(w*.8),h:Math.round(h*.8)};
+}
+
+function placedCardSize(){
+  if(isFreeMode()) return {w:FREE_CARD_W,h:FREE_CARD_H};
+  const {w,h}=cardSize(cfg.cardsPerSpread);
+  return {w:Math.round(w*.75),h:Math.round(h*.75)};
+}
+
+function updateDrawModeUI(){
+  const free=isFreeMode();
+  document.body.classList.toggle('multi-mode',free);
+  document.querySelector('.app').classList.toggle('multi-mode',free);
+  const threeBtn=document.getElementById('modeThreeBtn');
+  const freeBtn=document.getElementById('modeFreeBtn');
+  threeBtn.classList.toggle('active',!free); threeBtn.setAttribute('aria-pressed',String(!free));
+  freeBtn.classList.toggle('active',free); freeBtn.setAttribute('aria-pressed',String(free));
+}
+
+function setDrawMode(mode){
+  if(mode!=='three'&&mode!=='free'||mode===drawMode||isAnimating||revealAnimating) return;
+  drawMode=mode;
+  closeFan();
+  updateDrawModeUI();
+  beginSpread();
+}
+
+function updateFreeCanvasTransform(){
+  const content=document.getElementById('freeCanvasContent');
+  if(!content) return;
+  content.style.transform='translate3d('+freePanX.toFixed(2)+'px,'+freePanY.toFixed(2)+'px,0) scale('+freeZoom.toFixed(3)+')';
+  const label=document.getElementById('canvasZoomLabel');
+  if(label&&!freeZoomEditing) label.textContent=Math.round(freeZoom*100)+'%';
+}
+
+function resetFreeView(){
+  const canvas=document.getElementById('freeCanvas');
+  freeZoom=FREE_ZOOM_DEFAULT;
+  freePanX=canvas?Math.round((canvas.clientWidth-FREE_BOARD_W*freeZoom)/2):0;
+  freePanY=canvas?Math.round((canvas.clientHeight-FREE_BOARD_H*freeZoom)/2):0;
+  updateFreeCanvasTransform();
+}
+
+function resetFreeBoard(){
+  const content=document.getElementById('freeCanvasContent');
+  clearFreeCardSelection();
+  selectFreeNote(null);
+  if(content) content.innerHTML='<div class="free-placement-zone" aria-hidden="true"></div>';
+  document.getElementById('freeCanvas')?.classList.remove('is-panning');
+  if(freePanRaf){cancelAnimationFrame(freePanRaf);freePanRaf=0;}
+  if(freeCardDragRaf){cancelAnimationFrame(freeCardDragRaf);freeCardDragRaf=0;}
+  if(freeNoteDragRaf){cancelAnimationFrame(freeNoteDragRaf);freeNoteDragRaf=0;}
+  freeNoteDragState=null;
+  freePanState=null;
+  freeCardDragState=null;
+  freeCardZ=0;
+  resetFreeView();
+}
+
+function setFreeZoom(nextZoom,anchorX,anchorY){
+  if(!isFreeMode()) return;
+  const canvas=document.getElementById('freeCanvas');
+  if(!canvas) return;
+  const rect=canvas.getBoundingClientRect();
+  const x=anchorX===undefined?rect.width/2:anchorX-rect.left;
+  const y=anchorY===undefined?rect.height/2:anchorY-rect.top;
+  const boardX=(x-freePanX)/freeZoom, boardY=(y-freePanY)/freeZoom;
+  freeZoom=clamp(nextZoom,FREE_ZOOM_MIN,FREE_ZOOM_MAX);
+  freePanX=x-boardX*freeZoom;
+  freePanY=y-boardY*freeZoom;
+  updateFreeCanvasTransform();
+}
+
+function zoomFreeCanvas(direction,anchorX,anchorY){
+  setFreeZoom(freeZoom+direction*FREE_ZOOM_STEP,anchorX,anchorY);
+}
+
+function beginFreeZoomEdit(event){
+  if(event){event.preventDefault();event.stopPropagation();}
+  if(!isFreeMode()||freeZoomEditing) return;
+  const label=document.getElementById('canvasZoomLabel');
+  if(!label) return;
+  freeZoomEditing=true;
+  const input=document.createElement('input');
+  input.className='canvas-zoom-input';
+  input.type='number';
+  input.min=String(FREE_ZOOM_MIN*100);
+  input.max=String(FREE_ZOOM_MAX*100);
+  input.step='1';
+  input.value=String(Math.round(freeZoom*100));
+  input.setAttribute('aria-label','Tỉ lệ thu phóng, từ 35 đến 175 phần trăm');
+  label.textContent='';
+  label.appendChild(input);
+  const finish=commit=>{
+    if(!freeZoomEditing) return;
+    freeZoomEditing=false;
+    if(commit){
+      const value=Number(input.value);
+      if(Number.isFinite(value)) setFreeZoom(value/100);
+      else updateFreeCanvasTransform();
+    }else{
+      updateFreeCanvasTransform();
+    }
+  };
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){e.preventDefault();finish(true);}
+    if(e.key==='Escape'){e.preventDefault();finish(false);}
+  });
+  input.addEventListener('blur',()=>finish(true));
+  requestAnimationFrame(()=>{input.focus();input.select();});
+}
+
+function freeBoardPointFromClient(clientX,clientY){
+  const canvas=document.getElementById('freeCanvas');
+  const rect=canvas.getBoundingClientRect();
+  return {
+    x:(clientX-rect.left-freePanX)/freeZoom,
+    y:(clientY-rect.top-freePanY)/freeZoom
+  };
+}
+
+function freePointFromClient(clientX,clientY){
+  const point=freeBoardPointFromClient(clientX,clientY);
+  return {
+    x:clamp(point.x-FREE_CARD_W/2,0,FREE_BOARD_W-FREE_CARD_W),
+    y:clamp(point.y-FREE_CARD_H/2,0,FREE_BOARD_H-FREE_CARD_H)
+  };
+}
+
+function initFreeCanvasInteractions(){
+  const canvas=document.getElementById('freeCanvas');
+  if(!canvas) return;
+  const renderPan=()=>{
+    freePanRaf=0;
+    const state=freePanState;
+    if(!state) return;
+    freePanX=state.panX+state.lastClientX-state.startClientX;
+    freePanY=state.panY+state.lastClientY-state.startClientY;
+    updateFreeCanvasTransform();
+  };
+  const schedulePan=()=>{
+    if(!freePanRaf) freePanRaf=requestAnimationFrame(renderPan);
+  };
+  canvas.addEventListener('wheel',e=>{
+    if(!isFreeMode()||(!e.ctrlKey&&!e.metaKey)) return;
+    e.preventDefault();
+    zoomFreeCanvas(e.deltaY<0?1:-1,e.clientX,e.clientY);
+  },{passive:false});
+  canvas.addEventListener('pointerdown',e=>{
+    if(!isFreeMode()||e.button!==0||e.target.closest('.free-slot,.free-note')) return;
+    if(!e.shiftKey){clearFreeCardSelection();selectFreeNote(null);}
+    freePanState={
+      pointerId:e.pointerId,startClientX:e.clientX,startClientY:e.clientY,
+      lastClientX:e.clientX,lastClientY:e.clientY,panX:freePanX,panY:freePanY
+    };
+    canvas.classList.add('is-panning');
+    canvas.setPointerCapture?.(e.pointerId);
+  });
+  canvas.addEventListener('pointermove',e=>{
+    if(!freePanState||e.pointerId!==freePanState.pointerId) return;
+    freePanState.lastClientX=e.clientX;
+    freePanState.lastClientY=e.clientY;
+    schedulePan();
+    if(e.cancelable) e.preventDefault();
+  });
+  const stopPan=e=>{
+    if(!freePanState||e.pointerId!==freePanState.pointerId) return;
+    if(Number.isFinite(e.clientX)) freePanState.lastClientX=e.clientX;
+    if(Number.isFinite(e.clientY)) freePanState.lastClientY=e.clientY;
+    if(freePanRaf){cancelAnimationFrame(freePanRaf);freePanRaf=0;}
+    renderPan();
+    freePanState=null; canvas.classList.remove('is-panning');
+  };
+  canvas.addEventListener('pointerup',stopPan); canvas.addEventListener('pointercancel',stopPan);
+  canvas.addEventListener('lostpointercapture',stopPan);
+  canvas.addEventListener('dblclick',e=>{
+    if(!isFreeMode()||isAnimating||revealAnimating||dragState||e.target.closest('.free-slot,.free-note')) return;
+    e.preventDefault();
+    addFreeNote(e.clientX,e.clientY);
+  });
+}
+
+function bindFreeSlotInteractions(slotEl,card,slotNum){
+  let doubleClickCanCover=false;
+  slotEl.setAttribute('role','option');
+  slotEl.setAttribute('aria-selected','false');
+  slotEl.setAttribute('aria-label','Lá '+(slotNum+1));
+  const renderCardDrag=()=>{
+    freeCardDragRaf=0;
+    const state=freeCardDragState;
+    if(!state||state.slotEl!==slotEl||!state.moved) return;
+    const point=freeBoardPointFromClient(state.lastClientX,state.lastClientY);
+    const dx=clamp(point.x-state.startBoardX,-state.minX,FREE_BOARD_W-state.maxX);
+    const dy=clamp(point.y-state.startBoardY,-state.minY,FREE_BOARD_H-state.maxY);
+    state.items.forEach(item=>{
+      item.slot.style.left=(item.left+dx).toFixed(2)+'px';
+      item.slot.style.top=(item.top+dy).toFixed(2)+'px';
+    });
+  };
+  const stopCardDrag=e=>{
+    const state=freeCardDragState;
+    if(!state||state.pointerId!==e.pointerId||state.slotEl!==slotEl) return;
+    if(e.type==='pointerup'&&Number.isFinite(e.clientX)){
+      state.lastClientX=e.clientX;state.lastClientY=e.clientY;
+      if(Math.hypot(e.clientX-state.startClientX,e.clientY-state.startClientY)>4) state.moved=true;
+    }
+    if(freeCardDragRaf){cancelAnimationFrame(freeCardDragRaf);freeCardDragRaf=0;}
+    renderCardDrag();
+    freeCardDragState=null;
+    state.items.forEach(item=>item.slot.classList.remove('is-moving'));
+    if(state.moved){
+      slotEl.dataset.skipClick='true';
+      setTimeout(()=>{if(slotEl.isConnected) delete slotEl.dataset.skipClick;},0);
+    }
+  };
+
+  slotEl.addEventListener('pointerdown',e=>{
+    if(!isFreeMode()||e.button!==0||isAnimating||revealAnimating||dragState||card.classList.contains('is-revealing')) return;
+    e.stopPropagation();
+    if(document.activeElement?.closest('.free-note')) document.activeElement.blur();
+    selectFreeNote(null);
+    if(e.shiftKey){
+      e.preventDefault();
+      selectFreeSlot(slotEl,!selectedFreeSlots.has(slotEl));
+      return;
+    }
+    if(!selectedFreeSlots.has(slotEl)) clearFreeCardSelection();
+    const slots=selectedFreeSlots.has(slotEl)?[...selectedFreeSlots]:[slotEl];
+    const items=slots.filter(slot=>slot.isConnected).map(slot=>({slot,left:parseFloat(slot.style.left)||0,top:parseFloat(slot.style.top)||0}));
+    const point=freeBoardPointFromClient(e.clientX,e.clientY);
+    freeCardDragState={
+      pointerId:e.pointerId,slotEl,slotNum,items,startBoardX:point.x,startBoardY:point.y,
+      minX:Math.min(...items.map(item=>item.left)),minY:Math.min(...items.map(item=>item.top)),
+      maxX:Math.max(...items.map(item=>item.left+FREE_CARD_W)),maxY:Math.max(...items.map(item=>item.top+FREE_CARD_H)),
+      startClientX:e.clientX,startClientY:e.clientY,lastClientX:e.clientX,lastClientY:e.clientY,moved:false
+    };
+    items.forEach(item=>{item.slot.style.zIndex=String(++freeCardZ);});
+    if(slotEl.setPointerCapture){try{slotEl.setPointerCapture(e.pointerId)}catch(_){} }
+  });
+
+  slotEl.addEventListener('pointermove',e=>{
+    const state=freeCardDragState;
+    if(!state||state.pointerId!==e.pointerId||state.slotEl!==slotEl) return;
+    state.lastClientX=e.clientX;state.lastClientY=e.clientY;
+    if(Math.hypot(e.clientX-state.startClientX,e.clientY-state.startClientY)>4){
+      state.moved=true;
+      state.items.forEach(item=>item.slot.classList.add('is-moving'));
+    }
+    if(!freeCardDragRaf) freeCardDragRaf=requestAnimationFrame(renderCardDrag);
+    if(e.cancelable) e.preventDefault();
+  });
+  slotEl.addEventListener('pointerup',stopCardDrag);
+  slotEl.addEventListener('pointercancel',stopCardDrag);
+  slotEl.addEventListener('lostpointercapture',stopCardDrag);
+  slotEl.addEventListener('dragstart',e=>e.preventDefault());
+  slotEl.addEventListener('click',e=>{
+    if(slotEl.dataset.skipClick==='true'){
+      e.preventDefault();e.stopPropagation();delete slotEl.dataset.skipClick;return;
+    }
+    if(e.detail===1) doubleClickCanCover=!!slotEl.querySelector('.card-inner.flipped');
+    if(e.shiftKey||selectedFreeSlots.has(slotEl)) return;
+    handlePlacedCardClick(slotNum);
+  });
+  slotEl.addEventListener('dblclick',e=>{
+    e.preventDefault();e.stopPropagation();
+    if(e.shiftKey||!doubleClickCanCover) return;
+    doubleClickCanCover=false;
+    coverFreeCard(slotNum);
+  });
+}
+
+async function coverFreeCard(number){
+  if(!isFreeMode()||isAnimating||revealAnimating||dragState||freeCardDragState||freeNoteDragState) return;
+  const slot=document.getElementById('slot'+number);
+  const card=slot?.querySelector('.card'),inner=slot?.querySelector('.card-inner');
+  if(!card||!inner?.classList.contains('flipped')) return;
+  const runId=interactionRun;
+  revealAnimating=true;setMotionBusy(true);
+  slot.classList.add('revealing');card.classList.remove('can-flip');card.classList.add('is-revealing');
+  inner.classList.remove('flipped');revealedCount=Math.max(0,revealedCount-1);
+  try{await waitForVisualMotion(card,motionTime(FLIP_MS+120));}
+  finally{
+    if(runId===interactionRun){
+      slot.classList.remove('revealing');card.classList.remove('is-revealing');card.classList.add('can-flip');
+      revealAnimating=false;setMotionBusy(false);flushPendingResize();
+      document.getElementById('stateMsg').textContent='Bấm lá bài hoặc nhấn Space để lật bài';
+    }
+  }
+}
+
+async function flipPlacedCards(slotNumbers=null){
+  if(isAnimating||revealAnimating||dragState||freeCardDragState||freeNoteDragState||freePanState) return;
+  const root=document.getElementById(isFreeMode()?'freeCanvasContent':'spreadArea');
+  const allowed=slotNumbers===null?null:new Set(slotNumbers);
+  const entries=Array.from(root.querySelectorAll('.slot')).map(slot=>{
+    const number=Number(slot.id.replace('slot',''));
+    return {slot,number,card:slot.querySelector('.card'),inner:slot.querySelector('.card-inner')};
+  }).filter(({number,card,inner})=>(allowed===null||allowed.has(number))&&card&&inner&&!inner.classList.contains('flipped'));
+  if(!entries.length) return;
+  revealAnimating=true;
+  const runId=interactionRun;
+  setMotionBusy(true);
+  entries.forEach(({slot,card,number})=>{
+    slot.classList.remove('is-settling');
+    slot.classList.add('revealing');
+    card.classList.remove('can-flip');
+    card.classList.add('is-revealing');
+    flipCard(number);
+  });
+  try{
+    const labels=(async()=>{
+      await wait(motionTime(FLIP_LABEL_MS));
+      if(runId!==interactionRun) return;
+      entries.forEach(({number})=>{
+        const info=document.getElementById('info'+number);
+        if(info&&info.dataset.name){
+          const name=document.createElement('div');name.className='ci-name';name.textContent=info.dataset.name;
+          info.replaceChildren(name);
+        }
+      });
+    })();
+    await Promise.all([...entries.map(({card})=>waitForVisualMotion(card,motionTime(FLIP_MS+120))),labels]);
+  }finally{
+    if(runId===interactionRun){
+      entries.forEach(({slot,card})=>{slot.classList.remove('revealing');card.classList.remove('is-revealing');});
+      revealAnimating=false;
+      setMotionBusy(false);
+      if(!isFreeMode()&&dealtSlots===cfg.cardsPerSpread&&revealedCount>=cfg.cardsPerSpread){
+        onSpreadComplete();
+      }else{
+        document.getElementById('stateMsg').textContent=isFreeMode()
+          ?(revealedCount===dealtSlots?'Bạn có thể sắp xếp bài hoặc tiếp tục bốc thêm lá':'Nhấn Enter để lật nhóm hoặc Space để lật tất cả')
+          :(dealtSlots<cfg.cardsPerSpread?'Kéo lá tiếp theo vào ô':'Bấm lá tiếp theo hoặc Space để lật bài');
+      }
+      flushPendingResize();
+    }
+  }
+}
+
+function flipAllFreeCards(){
+  if(isFreeMode()) return flipPlacedCards();
+}
+
+function copySelectedRevealedNames(){
+  if(!isFreeMode()) return;
+  const names=[...selectedFreeSlots].filter(slot=>slot.isConnected&&slot.querySelector('.card-inner.flipped'))
+    .map(slot=>Number(slot.id.replace('slot',''))).sort((a,b)=>a-b)
+    .map(number=>currentDraw[number]?.name).filter(Boolean).map(compactCardName);
+  if(!names.length) return;
+  const text=names.join(', ');
+  const fallback=()=>{
+    const focused=document.activeElement;
+    const selection=window.getSelection();
+    const ranges=Array.from({length:selection.rangeCount},(_,i)=>selection.getRangeAt(i).cloneRange());
+    const field=document.createElement('textarea');field.value=text;
+    field.style.cssText='position:fixed;left:-10000px;top:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(field);field.focus({preventScroll:true});field.select();
+    try{document.execCommand('copy');}catch(_){}finally{
+      field.remove();focused?.focus?.({preventScroll:true});
+      selection.removeAllRanges();ranges.forEach(range=>selection.addRange(range));
+    }
+  };
+  if(navigator.clipboard?.writeText){
+    try{navigator.clipboard.writeText(text).catch(fallback);}catch(_){fallback();}
+  }else{fallback();}
+}
+
+const modifierShortcuts={Control:null,Alt:null};
+function isTextEntry(target){return target instanceof Element&&(target.isContentEditable||!!target.closest('input,textarea,select'));}
+document.addEventListener('keydown',e=>{
+  Object.keys(modifierShortcuts).forEach(key=>{if(modifierShortcuts[key]&&e.key!==key) modifierShortcuts[key].used=true;});
+  if(!Object.hasOwn(modifierShortcuts,e.key)||e.repeat||e.isComposing||isTextEntry(e.target)) return;
+  if(e.key==='Control'&&(e.altKey||e.metaKey||e.shiftKey)||e.key==='Alt'&&(e.ctrlKey||e.metaKey)) return;
+  modifierShortcuts[e.key]={used:false};
+  if(e.key==='Alt'&&isFreeMode()&&selectedFreeSlots.size) e.preventDefault();
+},true);
+document.addEventListener('keyup',e=>{
+  if(!Object.hasOwn(modifierShortcuts,e.key)) return;
+  const shortcut=modifierShortcuts[e.key];modifierShortcuts[e.key]=null;
+  if(!shortcut||shortcut.used||e.isComposing||isTextEntry(e.target)) return;
+  if(e.key==='Control'){e.preventDefault();restartWizard();}
+  else if(isFreeMode()){e.preventDefault();copySelectedRevealedNames();}
+},true);
+const markModifierGesture=()=>{Object.values(modifierShortcuts).forEach(shortcut=>{if(shortcut) shortcut.used=true;});};
+document.addEventListener('pointerdown',markModifierGesture,true);
+document.addEventListener('wheel',markModifierGesture,{capture:true,passive:true});
+window.addEventListener('blur',()=>{modifierShortcuts.Control=null;modifierShortcuts.Alt=null;});
+
+document.addEventListener('keydown',e=>{
+  const target=e.target;
+  if(e.defaultPrevented||e.repeat||e.isComposing||e.ctrlKey||e.metaKey||e.altKey||target.closest('input,textarea,select')||target.isContentEditable) return;
+  if(e.code==='Space'||e.key===' '){
+    e.preventDefault();
+    flipPlacedCards();
+  }else if(isFreeMode()&&e.key==='Enter'&&selectedFreeSlots.size){
+    e.preventDefault();
+    flipPlacedCards([...selectedFreeSlots].map(slot=>Number(slot.id.replace('slot',''))));
+  }else if(isFreeMode()&&e.key==='Delete'&&selectedFreeNote&&!freeNoteDragState){
+    e.preventDefault();
+    const note=selectedFreeNote;selectFreeNote(null);note.remove();
+  }else if(isFreeMode()&&e.key==='Escape'){
+    clearFreeCardSelection();selectFreeNote(null);
+  }
+});
 
 function buildWizardGrids(){
   // Grid 1: 1-5 spreads
@@ -625,13 +1593,19 @@ function pickRandom(){
 function startGame(){
   document.getElementById('setupWizard').style.display='none';
   document.getElementById('gameArea').style.display='block';
+  updateDrawModeUI();
   currentSpreadIdx=0;
   beginSpread();
 }
 
 function buildSpreadSlots(){
+  resetFreeBoard();
+  if(isFreeMode()){
+    document.getElementById('spreadArea').innerHTML='';
+    return;
+  }
   const n=cfg.cardsPerSpread;
-  const {w,h}=cardSize(n);
+  const {w,h}=spreadSlotSize(n);
   const el=document.getElementById('spreadArea'); el.innerHTML='';
   for(let i=0;i<n;i++){
     const wrap=document.createElement('div'); wrap.className='slot-wrap';
@@ -639,7 +1613,7 @@ function buildSpreadSlots(){
     const slot=document.createElement('div');
     slot.className='slot'; slot.id='slot'+i;
     slot.style.width=w+'px'; slot.style.height=h+'px';
-    const slotRotation=[-4,0,4][i]||0;
+    const slotRotation=0;
     const revealTilt=[-4,2,4][i]||(i%2?-3:3);
     slot.style.setProperty('--slot-rotation',slotRotation+'deg');
     slot.style.setProperty('--reveal-tilt',revealTilt+'deg');
@@ -654,6 +1628,8 @@ function buildSpreadSlots(){
 }
 
 function beginSpread(){
+  if(activeHistorySpread){activeHistorySpread.revealed=true;renderThreeCardHistory();}
+  activeHistorySpread=null;
   interactionRun++;
   closeFan();
   isAnimating=false;
@@ -663,8 +1639,10 @@ function beginSpread(){
   document.querySelector('.deck-area').classList.remove('complete');
   document.getElementById('deckTop').classList.remove('disabled');
   document.getElementById('deckBadge').textContent='78 lá';
-  document.getElementById('btnFinish').style.display='none';
-  document.getElementById('stateMsg').textContent='Kéo một lá bài vào ô số 1';
+  document.getElementById('btnFinish').style.display=isFreeMode()?'block':'none';
+  document.getElementById('stateMsg').textContent=isFreeMode()
+    ?'Kéo lá bài vào bất kỳ vị trí nào trên bàn trải · Cuộn Ctrl + chuột để thu phóng'
+    :'Kéo một lá bài vào ô';
   buildSpreadSlots();
   const runId=interactionRun;
   requestAnimationFrame(()=>{if(runId===interactionRun) openFan();});
@@ -710,7 +1688,7 @@ const FLIP_MS=620;
 const FLIP_LABEL_MS=345;
 const FAN_MAX_ROTATION=6;
 
-const CARD_BACK_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 290"><rect width="170" height="290" rx="12" fill="white"/><rect x="1" y="1" width="168" height="288" rx="11" fill="none" stroke="black" stroke-width="2"/><rect x="9" y="9" width="152" height="272" rx="7" fill="none" stroke="black" stroke-width="1"/><rect x="17" y="17" width="136" height="256" rx="5" fill="none" stroke="black" stroke-opacity=".38"/><text x="85" y="159" text-anchor="middle" font-family="Georgia,serif" font-size="34" fill="black">✦</text></svg>';
+const CARD_BACK_SVG="<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 170 290\"><rect width=\"170\" height=\"290\" rx=\"10\" fill=\"#fffdf8\"/><rect x=\"7\" y=\"7\" width=\"156\" height=\"276\" rx=\"5\" fill=\"none\" stroke=\"#c4ab8e\" stroke-width=\"1\"/><rect x=\"11\" y=\"11\" width=\"148\" height=\"268\" rx=\"3\" fill=\"none\" stroke=\"#dbc9b3\" stroke-width=\".65\"/><g transform=\"translate(85 145) rotate(28)\"><ellipse rx=\"34\" ry=\"77\" fill=\"none\" stroke=\"#b3916e\" stroke-width=\".85\"/><circle cx=\"0\" cy=\"-77\" r=\"3\" fill=\"#b3916e\"/><circle cx=\"0\" cy=\"77\" r=\"3\" fill=\"#b3916e\"/></g><path d=\"M85 129L87 143L98 145L87 147L85 161L83 147L72 145L83 143Z\" fill=\"#b3916e\"/></svg>";
 const CARD_BACK_SRC='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(CARD_BACK_SVG);
 
 let isAnimating=false;
@@ -828,7 +1806,8 @@ function preloadCardImage(src){
 function updateFanMetrics(){
   const viewportW=window.innerWidth||1000;
   const viewportH=window.innerHeight||720;
-  const scale=Math.max(.62,Math.min(1,viewportW/1000,viewportH/720));
+  const viewportScale=Math.max(.62,Math.min(1,viewportW/1000,viewportH/720));
+  const scale=viewportScale*(isFreeMode()?.7:.75);
   FC_W=Math.round(FAN_BASE_W*scale);
   FC_H=Math.round(FAN_BASE_H*scale);
   FAN_SPACING=FAN_BASE_SPACING*scale;
@@ -847,7 +1826,7 @@ function updateFanMetrics(){
 }
 
 function openFan(){
-  if(isAnimating||dealtSlots>=cfg.cardsPerSpread) return;
+  if(isAnimating||!canDrawMore()) return;
   const overlay=document.getElementById('fanOverlay');
   if(overlay.classList.contains('open')) return;
   const buildId=++fanBuildId;
@@ -860,7 +1839,9 @@ function openFan(){
   overlay.classList.add('open');
   setMotionBusy(true);
   document.querySelector('.deck-area').classList.add('fan-open');
-  document.getElementById('stateMsg').textContent='Kéo một lá bài vào ô số 1';
+  document.getElementById('stateMsg').textContent=isFreeMode()
+    ?'Kéo lá bài vào bất kỳ vị trí nào trên bàn trải'
+    :'Kéo một lá bài vào ô';
   buildFan(buildId);
 }
 
@@ -915,12 +1896,16 @@ function positionFanStage(){
   const viewportH=window.innerHeight||700;
   const stageW=window.innerWidth||700;
   const stageH=FAN_STAGE_HEIGHT;
-  const spreadRect=document.getElementById('spreadArea').getBoundingClientRect();
-  // The stage clips the bottom of every card. Even at maximum lift roughly
-  // one quarter of the card remains below the visible deck boundary.
-  const desiredTop=spreadRect.bottom+16-FAN_POSITION_ANCHOR+FAN_STAGE_SHIFT;
-  const maxTop=Math.max(48,viewportH-stageH-8);
-  const stageTop=Math.max(48,Math.min(desiredTop,maxTop));
+  if(isFreeMode()){
+    const stageTop=Math.max(0,viewportH-stageH);
+    stage.style.top=stageTop+'px';
+    stage.style.width=stageW+'px';
+    stage.style.height=stageH+'px';
+    fanStageRect={left:0,top:stageTop,width:stageW,height:stageH};
+    return {stageTop,stageW};
+  }
+  // Anchor the three-card fan to the viewport bottom and keep hit testing aligned.
+  const stageTop=Math.max(0,viewportH-stageH);
   stage.style.top=stageTop+'px';
   stage.style.width=stageW+'px';
   stage.style.height=stageH+'px';
@@ -931,7 +1916,8 @@ function positionFanStage(){
 function calculateFanLayout(stageW){
   const n=remaining.length;
   const center=(n-1)/2;
-  const maxFitSpacing=n>1?Math.max(1,(stageW-FAN_EDGE_PAD*2-FC_W)/(n-1)):0;
+  const layoutWidth=isFreeMode()?stageW:stageW*.75;
+  const maxFitSpacing=n>1?Math.max(1,(layoutWidth-FAN_EDGE_PAD*2-FC_W)/(n-1)):0;
   const spacing=n>1?Math.min(FAN_SPACING,maxFitSpacing):0;
   return remaining.map((cardIdx,index)=>{
     const offset=index-center;
@@ -1196,7 +2182,7 @@ function handleFanPointerLeave(){
 
 function handleFanPointerDown(e){
   if(e.pointerType==='mouse'&&e.button!==0) return;
-  if(isAnimating||!fanReady||dealtSlots>=cfg.cardsPerSpread||!fanLayout.length) return;
+  if(isAnimating||!fanReady||!canDrawMore()||!fanLayout.length) return;
   e.preventDefault();
   const visualIndex=pointerToVisibleFanIndex(e.clientX,e.clientY);
   if(visualIndex<0) return;
@@ -1367,16 +2353,16 @@ function startFanWave(){
   fanRaf=requestAnimationFrame(fanWaveFrame);
 }
 
-function makeFlyingCard(cardRect,startAngle){
+function makeFlyingCard(cardRect,startAngle,width=FC_W,height=FC_H,anchorX=null,anchorY=null){
   const flyer=document.createElement('img');
-  const startLeft=cardRect.left+cardRect.width/2-FC_W/2;
-  const startTop=cardRect.top+cardRect.height/2-FC_H/2;
+  const startLeft=anchorX===null?cardRect.left+cardRect.width/2-width/2:anchorX-width/2;
+  const startTop=anchorY===null?cardRect.top+cardRect.height/2-height/2:anchorY-height/2;
   flyer.className='flying-card';
   flyer.src=CARD_BACK_SRC;
   flyer.alt='';
   flyer.draggable=false;
-  flyer.style.width=FC_W+'px';
-  flyer.style.height=FC_H+'px';
+  flyer.style.width=width+'px';
+  flyer.style.height=height+'px';
   flyer.style.transform='translate3d('+startLeft+'px,'+startTop+'px,0) rotate('+startAngle+'deg) scale(1)';
   document.body.appendChild(flyer);
   return {flyer,startLeft,startTop};
@@ -1388,7 +2374,7 @@ function isInsideDropTarget(x,y,rect){
 }
 
 function startFanDrag(visualIndex,pointer){
-  if(isAnimating||dragState||!fanReady||dealtSlots>=cfg.cardsPerSpread) return false;
+  if(isAnimating||dragState||!fanReady||!canDrawMore()) return false;
   const item=fanLayout[visualIndex];
   if(!item) return false;
   const cardEl=item.el||document.getElementById('fc-'+item.cardIdx);
@@ -1397,10 +2383,15 @@ function startFanDrag(visualIndex,pointer){
   if(pointer.clientY<cardRect.top-18||pointer.clientY>cardRect.bottom+18) return false;
 
   const slotNum=dealtSlots;
-  const targetSlot=document.getElementById('slot'+slotNum);
-  const targetRect=targetSlot.getBoundingClientRect();
+  const targetSlot=isFreeMode()?null:document.getElementById('slot'+slotNum);
+  const targetRect=isFreeMode()
+    ?document.getElementById('freeCanvas').getBoundingClientRect()
+    :targetSlot.getBoundingClientRect();
   const selectedAngle=item.angle;
-  const slotRotation=Number(targetSlot.dataset.rotation)||0;
+  const slotRotation=targetSlot?(Number(targetSlot.dataset.rotation)||0):0;
+  const placementSize=placedCardSize();
+  const flyerW=isFreeMode()?placementSize.w*freeZoom:FC_W;
+  const flyerH=isFreeMode()?placementSize.h*freeZoom:FC_H;
   isAnimating=true;
   pendingFanPointer=null;
   targetHoverStrength=0;
@@ -1409,17 +2400,20 @@ function startFanDrag(visualIndex,pointer){
   startFanWave();
   cardEl.classList.add('is-selected');
   cardEl.style.visibility='hidden';
-  const {flyer,startLeft,startTop}=makeFlyingCard(cardRect,selectedAngle);
+  const {flyer,startLeft,startTop}=makeFlyingCard(
+    cardRect,selectedAngle,flyerW,flyerH,
+    isFreeMode()?pointer.clientX:null,isFreeMode()?pointer.clientY:null
+  );
   void flyer.offsetWidth;
   flyer.classList.add('is-dragging');
-  targetSlot.classList.add('drop-target');
+  if(targetSlot) targetSlot.classList.add('drop-target');
   const imgSrc=getCardImageSrc(CARD_KEYS[item.cardIdx]);
   const imageReady=preloadCardImage(imgSrc);
   dragState={
     pointerId:pointer.pointerId,
     runId:interactionRun,
     buildId:fanBuildId,
-    item,cardIdx:item.cardIdx,cardEl,flyer,targetSlot,targetRect,slotNum,selectedAngle,slotRotation,imgSrc,imageReady,
+    item,cardIdx:item.cardIdx,cardEl,flyer,targetSlot,targetRect,slotNum,selectedAngle,slotRotation,imgSrc,imageReady,isFree:isFreeMode(),flyerW,flyerH,
     offsetX:pointer.clientX-startLeft,
     offsetY:pointer.clientY-startTop,
     lastClientX:pointer.clientX,lastClientY:pointer.clientY,
@@ -1448,10 +2442,10 @@ function renderFanDrag(now){
   state.raf=0;
   const left=state.lastClientX-state.offsetX;
   const top=state.lastClientY-state.offsetY;
-  const isOver=isInsideDropTarget(left+FC_W/2,top+FC_H/2,state.targetRect);
+  const isOver=isInsideDropTarget(left+state.flyerW/2,top+state.flyerH/2,state.targetRect);
   const progress=reducedMotion?1:Math.min(1,(now-state.pickupStartedAt)/FAN_PICKUP_MS);
   const eased=1-Math.pow(1-progress,3);
-  const scale=1+(reducedMotion?.01:.04)*eased;
+  const scale=state.isFree?1:1+(reducedMotion?.01:.04)*eased;
   const desiredAngle=isOver?state.slotRotation:state.selectedAngle*.35;
   const dt=state.lastRenderAt?Math.min((now-state.lastRenderAt)/1000,.064):1/60;
   state.lastRenderAt=now;
@@ -1460,7 +2454,7 @@ function renderFanDrag(now){
   state.flyer.style.transform='translate3d('+left.toFixed(3)+'px,'+top.toFixed(3)+'px,0) rotate('+state.currentAngle.toFixed(3)+'deg) scale('+scale.toFixed(4)+')';
   if(isOver!==state.isOver){
     state.isOver=isOver;
-    state.targetSlot.classList.toggle('drag-over',isOver);
+    if(state.targetSlot) state.targetSlot.classList.toggle('drag-over',isOver);
   }
   if(progress<1||Math.abs(desiredAngle-state.currentAngle)>.01) state.raf=requestAnimationFrame(renderFanDrag);
 }
@@ -1470,7 +2464,7 @@ async function cancelFanDrag(immediate=false){
   if(!state) return;
   if(state.raf) cancelAnimationFrame(state.raf);
   dragState=null;
-  state.targetSlot.classList.remove('drop-target','drag-over','is-landing');
+  if(state.targetSlot) state.targetSlot.classList.remove('drop-target','drag-over','is-landing');
   const stage=document.getElementById('fanStage');
   if(fanRaf){cancelAnimationFrame(fanRaf);fanRaf=0;}
   fanLastFrameTime=0;
@@ -1495,18 +2489,18 @@ async function cancelFanDrag(immediate=false){
     return;
   }
   const returnRect=state.cardEl.getBoundingClientRect();
-  const returnLeft=returnRect.left+returnRect.width/2-FC_W/2;
-  const returnTop=returnRect.top+returnRect.height/2-FC_H/2;
-  const currentCenterX=state.lastClientX-state.offsetX+FC_W/2;
-  const currentCenterY=state.lastClientY-state.offsetY+FC_H/2;
-  const returnCenterX=returnLeft+FC_W/2;
-  const returnCenterY=returnTop+FC_H/2;
+  const returnLeft=returnRect.left+returnRect.width/2-state.flyerW/2;
+  const returnTop=returnRect.top+returnRect.height/2-state.flyerH/2;
+  const currentCenterX=state.lastClientX-state.offsetX+state.flyerW/2;
+  const currentCenterY=state.lastClientY-state.offsetY+state.flyerH/2;
+  const returnCenterX=returnLeft+state.flyerW/2;
+  const returnCenterY=returnTop+state.flyerH/2;
   const distance=Math.hypot(returnCenterX-currentCenterX,returnCenterY-currentCenterY);
   const duration=adaptiveDuration(distance,FAN_RETURN_MIN_MS,FAN_RETURN_MAX_MS);
   state.flyer.classList.remove('is-dragging');
   await animateFlyerTo(
     state.flyer,
-    'translate3d('+returnLeft.toFixed(3)+'px,'+returnTop.toFixed(3)+'px,0) rotate('+state.selectedAngle.toFixed(3)+'deg) scale(1)',
+    'translate3d('+returnLeft.toFixed(3)+'px,'+returnTop.toFixed(3)+'px,0) rotate('+state.selectedAngle.toFixed(3)+'deg) scale('+(FC_W/state.flyerW).toFixed(5)+','+(FC_H/state.flyerH).toFixed(5)+')',
     duration
   );
   if(state.runId!==interactionRun||state.buildId!==fanBuildId){state.flyer.remove();return;}
@@ -1556,8 +2550,8 @@ async function cancelFanDrag(immediate=false){
 async function finishFanDrag(clientX,clientY,pointerId){
   const state=dragState;
   if(!state||pointerId!==state.pointerId) return;
-  const dropX=clientX-state.offsetX+FC_W/2;
-  const dropY=clientY-state.offsetY+FC_H/2;
+  const dropX=clientX-state.offsetX+state.flyerW/2;
+  const dropY=clientY-state.offsetY+state.flyerH/2;
   if(!isInsideDropTarget(dropX,dropY,state.targetRect)){
     cancelFanDrag();
     return;
@@ -1565,8 +2559,10 @@ async function finishFanDrag(clientX,clientY,pointerId){
 
   if(state.raf) cancelAnimationFrame(state.raf);
   dragState=null;
-  state.targetSlot.classList.remove('drag-over');
-  state.targetSlot.classList.add('is-landing');
+  if(state.targetSlot){
+    state.targetSlot.classList.remove('drag-over');
+    state.targetSlot.classList.add('is-landing');
+  }
   if(state.runId!==interactionRun||state.buildId!==fanBuildId){state.flyer.remove();return;}
 
   const pos=remaining.indexOf(state.cardIdx);
@@ -1578,21 +2574,33 @@ async function finishFanDrag(clientX,clientY,pointerId){
   const reversed=Math.random()<.5;
   const imgSrc=state.imgSrc;
   const imageReady=state.imageReady;
-  const isLast=state.slotNum+1>=cfg.cardsPerSpread;
+  const isLast=state.isFree?remaining.length===0:state.slotNum+1>=cfg.cardsPerSpread;
   const stage=document.getElementById('fanStage');
   const fanMotion=isLast
     ?(beginFanExit(state.buildId),waitForVisualMotion(stage,motionTime(FAN_EXIT_MS+80)))
     :layoutFanCards(true,state.buildId);
   document.getElementById('fanRemBadge').textContent=remaining.length+' lá còn lại';
 
-  const slotRect=state.targetRect;
-  const {w,h}=cardSize(cfg.cardsPerSpread);
-  const targetLeft=slotRect.left+slotRect.width/2-FC_W/2;
-  const targetTop=slotRect.top+slotRect.height/2-FC_H/2;
-  const scaleX=w/FC_W;
-  const scaleY=h/FC_H;
-  const currentCenterX=state.lastClientX-state.offsetX+FC_W/2;
-  const currentCenterY=state.lastClientY-state.offsetY+FC_H/2;
+  const {w,h}=placedCardSize();
+  const freePlacement=state.isFree?freePointFromClient(clientX,clientY):null;
+  const canvasRect=state.isFree?document.getElementById('freeCanvas').getBoundingClientRect():null;
+  const visualW=state.isFree?w*freeZoom:w;
+  const visualH=state.isFree?h*freeZoom:h;
+  const slotRect=state.isFree
+    ?{
+      left:canvasRect.left+freePanX+freePlacement.x*freeZoom,
+      top:canvasRect.top+freePanY+freePlacement.y*freeZoom,
+      width:visualW,height:visualH,
+      right:canvasRect.left+freePanX+(freePlacement.x+w)*freeZoom,
+      bottom:canvasRect.top+freePanY+(freePlacement.y+h)*freeZoom
+    }
+    :state.targetRect;
+  const targetLeft=slotRect.left+slotRect.width/2-state.flyerW/2;
+  const targetTop=slotRect.top+slotRect.height/2-state.flyerH/2;
+  const scaleX=visualW/state.flyerW;
+  const scaleY=visualH/state.flyerH;
+  const currentCenterX=state.lastClientX-state.offsetX+state.flyerW/2;
+  const currentCenterY=state.lastClientY-state.offsetY+state.flyerH/2;
   const targetCenterX=slotRect.left+slotRect.width/2;
   const targetCenterY=slotRect.top+slotRect.height/2;
   const distance=Math.hypot(targetCenterX-currentCenterX,targetCenterY-currentCenterY);
@@ -1607,11 +2615,11 @@ async function finishFanDrag(clientX,clientY,pointerId){
 
   // If the viewport changed during flight, ease the final few pixels to the
   // slot's new center before swapping the flyer for the real card.
-  for(let attempt=0;attempt<2&&state.resizeEpoch!==resizeEpoch;attempt++){
+  if(!state.isFree) for(let attempt=0;attempt<2&&state.resizeEpoch!==resizeEpoch;attempt++){
     state.resizeEpoch=resizeEpoch;
     resizeSpreadSlots();
     const correctedRect=state.targetSlot.getBoundingClientRect();
-    const correctedSize=cardSize(cfg.cardsPerSpread);
+    const correctedSize=placedCardSize();
     const correctedLeft=correctedRect.left+correctedRect.width/2-FC_W/2;
     const correctedTop=correctedRect.top+correctedRect.height/2-FC_H/2;
     const correctedScaleX=correctedSize.w/FC_W;
@@ -1630,10 +2638,12 @@ async function finishFanDrag(clientX,clientY,pointerId){
     if(state.runId!==interactionRun||state.buildId!==fanBuildId){state.flyer.remove();return;}
   }
 
-  placeCard(state.cardIdx,key,name,suit,reversed,imageReady,imgSrc);
+  placeCard(state.cardIdx,key,name,suit,reversed,imageReady,imgSrc,freePlacement);
   state.flyer.remove();
-  state.targetSlot.classList.remove('drop-target','is-landing');
-  playSlotSettle(state.targetSlot);
+  if(state.targetSlot){
+    state.targetSlot.classList.remove('drop-target','is-landing');
+    playSlotSettle(state.targetSlot);
+  }
   await fanMotion;
   if(state.runId!==interactionRun||state.buildId!==fanBuildId) return;
 
@@ -1663,16 +2673,29 @@ function playSlotSettle(slot){
   setTimeout(()=>cleanup(),motionTime(350));
 }
 
-function placeCard(cardIdx,key,name,suit,reversed,imageReady,imgSrc){
-  const n=cfg.cardsPerSpread;
+function placeCard(cardIdx,key,name,suit,reversed,imageReady,imgSrc,freePlacement=null){
+  const n=drawLimit();
   const slotNum=dealtSlots;
+  const {w,h}=placedCardSize();
   currentDraw.push({key,name,suit,reversed,imageReady});
-  const slotEl=document.getElementById('slot'+slotNum);
+  let slotEl=document.getElementById('slot'+slotNum);
+  if(isFreeMode()){
+    slotEl=document.createElement('div');
+    slotEl.className='slot free-slot';
+    slotEl.id='slot'+slotNum;
+    slotEl.dataset.rotation='0';
+    slotEl.style.left=(freePlacement?freePlacement.x:0)+'px';
+    slotEl.style.top=(freePlacement?freePlacement.y:0)+'px';
+    slotEl.style.width=w+'px';
+    slotEl.style.height=h+'px';
+    slotEl.style.zIndex=String(++freeCardZ);
+    document.getElementById('freeCanvasContent').appendChild(slotEl);
+  }
   slotEl.classList.add('ready');
-  const {w,h}=cardSize(n);
   const orientClass=reversed?'reversed':'';
   const card=document.createElement('div');
   card.className='card placed';
+  card.style.width=w+'px';card.style.height=h+'px';
   card.innerHTML=
     '<div class="card-inner" id="inner'+slotNum+'" style="width:'+w+'px;height:'+h+'px">'+
       '<div class="card-back" aria-hidden="true">'+
@@ -1681,21 +2704,27 @@ function placeCard(cardIdx,key,name,suit,reversed,imageReady,imgSrc){
         '<span class="back-corner bc-bl">✦</span><span class="back-corner bc-br">✦</span>'+
       '</div>'+
       '<div class="card-face">'+
-        '<div class="card-img-wrap '+orientClass+'"><img src="'+imgSrc+'" alt="'+name+'" decoding="async"></div>'+
+        '<div class="card-img-wrap '+orientClass+'"><img src="'+imgSrc+'" alt="'+name+'" decoding="async" draggable="false"></div>'+
       '</div>'+
     '</div>';
-  card.addEventListener('click',()=>handlePlacedCardClick(slotNum));
   slotEl.innerHTML='';
   slotEl.appendChild(card);
+  if(isFreeMode()){
+    card.classList.add('can-flip');
+    bindFreeSlotInteractions(slotEl,card,slotNum);
+  }else{
+    card.addEventListener('click',()=>handlePlacedCardClick(slotNum));
+  }
 
   const infoEl=document.getElementById('info'+slotNum);
   if(infoEl) infoEl.dataset.name=name;
   dealtSlots++;
+  saveThreeCardHistory();
   document.getElementById('deckBadge').textContent=remaining.length+' lá';
   document.getElementById('stateMsg').textContent=dealtSlots<n
-    ?'Kéo một lá bài vào ô số '+(dealtSlots+1)
+    ?(isFreeMode()?'Kéo lá tiếp theo vào bàn trải':'Kéo một lá bài vào ô')
     :'';
-  if(dealtSlots>=n) document.getElementById('deckTop').classList.add('disabled');
+  if(dealtSlots>=n||remaining.length===0) document.getElementById('deckTop').classList.add('disabled');
 }
 
 function flipCard(n){
@@ -1707,12 +2736,12 @@ function flipCard(n){
 }
 
 function enableManualFlip(){
-  for(let i=0;i<cfg.cardsPerSpread;i++){
+  for(let i=0;i<dealtSlots;i++){
     const slot=document.getElementById('slot'+i);
     const card=slot&&slot.querySelector('.card');
-    if(card) card.classList.add('can-flip');
+    if(card&&!slot.querySelector('.card-inner')?.classList.contains('flipped')) card.classList.add('can-flip');
   }
-  document.getElementById('stateMsg').textContent='Bấm vào từng lá để lật bài';
+  document.getElementById('stateMsg').textContent='Bấm vào từng lá hoặc nhấn Space để lật tất cả';
 }
 
 function getRevealStart(card,startsRaised){
@@ -1739,7 +2768,7 @@ function getRevealStart(card,startsRaised){
 }
 
 async function handlePlacedCardClick(n){
-  if(isAnimating||revealAnimating||dealtSlots<cfg.cardsPerSpread) return;
+  if(isAnimating||revealAnimating||(!isFreeMode()&&dealtSlots<cfg.cardsPerSpread)) return;
   const slot=document.getElementById('slot'+n);
   const card=slot&&slot.querySelector('.card');
   if(!slot||!card||!card.classList.contains('can-flip')) return;
@@ -1783,10 +2812,12 @@ async function handlePlacedCardClick(n){
       setMotionBusy(false);
       flushPendingResize();
       if(completed){
-        if(revealedCount>=cfg.cardsPerSpread){
+        if(!isFreeMode()&&revealedCount>=cfg.cardsPerSpread){
           onSpreadComplete();
         }else{
-          document.getElementById('stateMsg').textContent='Bấm lá tiếp theo để lật bài';
+          document.getElementById('stateMsg').textContent=isFreeMode()&&remaining.length
+            ?'Bạn có thể lật bài hoặc tiếp tục bốc thêm lá'
+            :'Bấm lá tiếp theo để lật bài';
         }
       }
     }
@@ -1794,16 +2825,22 @@ async function handlePlacedCardClick(n){
 }
 
 function onSpreadComplete(){
+  if(activeHistorySpread){activeHistorySpread.revealed=true;renderThreeCardHistory();}
   isAnimating=false;
   document.getElementById('stateMsg').textContent='';
   document.getElementById('btnFinish').style.display='block';
 }
 
+
 function resizeSpreadSlots(){
-  const {w,h}=cardSize(cfg.cardsPerSpread);
+  if(isFreeMode()) return;
+  const slotSize=spreadSlotSize(cfg.cardsPerSpread);
+  const {w,h}=placedCardSize();
   for(let i=0;i<cfg.cardsPerSpread;i++){
     const slot=document.getElementById('slot'+i);
-    if(slot){slot.style.width=w+'px';slot.style.height=h+'px';}
+    if(slot){slot.style.width=slotSize.w+'px';slot.style.height=slotSize.h+'px';}
+    const card=slot?.querySelector('.card');
+    if(card){card.style.width=w+'px';card.style.height=h+'px';}
     const inner=document.getElementById('inner'+i);
     if(inner){inner.style.width=w+'px';inner.style.height=h+'px';}
   }
@@ -1829,18 +2866,20 @@ function applyFanResize(){
   layoutFanCards(false,fanBuildId);
 }
 
+
 function handleFanResize(){
   resizeEpoch++;
   if(!resizeRaf) resizeRaf=requestAnimationFrame(applyFanResize);
 }
 
+
 function flushPendingResize(){
   if(resizePending&&!resizeRaf) handleFanResize();
 }
 
+
 window.addEventListener('resize',handleFanResize);
 if(window.visualViewport) window.visualViewport.addEventListener('resize',handleFanResize);
-
 
 
 function restartWizard(){
@@ -1853,7 +2892,11 @@ function restartWizard(){
 }
 
 /* ── Init: mở thẳng một trải bài 3 lá ── */
-document.addEventListener('DOMContentLoaded', startGame);
+document.addEventListener('DOMContentLoaded',()=>{
+  initHistoryPanelSize();
+  initFreeCanvasInteractions();
+  startGame();
+});
 </script>
 
 <!-- ══ FAN OVERLAY ══ -->
